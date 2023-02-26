@@ -32,37 +32,62 @@ class Vampire {
 
     return numberOfVampires;
 
-  }
+  };
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
-    if(this.offspring === null) {
+    if (this.offspring === null) {
       return false;
-  };
-    for(let i = 0; i < this.numberOfOffspring; i++){
-      if(vampire.name === this.offspring[i].name)
+    };
+    for (let i = 0; i < this.numberOfOffspring; i++) {
+      if (vampire.name === this.offspring[i].name) {
         return true;
+      }
     }
 
     return false;
-  }
+  };
 
-  /** Tree traversal methods **/
 
   // Returns the vampire object with that name, or null if no vampire exists with that name
   vampireWithName(name) {
-    
-  }
+    if (this.name === name) {
+      return this;
+    }
+
+    for (const offspring of this.offspring) {
+      const vampire = offspring.vampireWithName(name);
+      if (vampire) {
+        return vampire;
+      }
+    }
+
+    return null;
+  };
 
   // Returns the total number of vampires that exist
   get totalDescendents() {
-    
-  }
+    let total = 0;
+
+    for (const offspring of this.offspring) {
+      total += offspring.totalDescendents + 1;
+    }
+
+    return total;
+  };
 
   // Returns an array of all the vampires that were converted after 1980
   get allMillennialVampires() {
-    
-  }
+    let vampires = [];
+    if (this.yearConverted > 1980) {
+      vampires.push(this);
+    }
+    for (const offSpring of this.offspring) {
+      vampires = vampires.concat(offSpring.allMillennialVampires);
+
+    }
+    return vampires;
+  };
 
   /** Stretch **/
 
@@ -74,20 +99,7 @@ class Vampire {
   closestCommonAncestor(vampire) {
 
   }
-}
-const original = new Vampire("Original", 6);
-const ansel = new Vampire("Ansel", 5);
-const bart = new Vampire("Bart", 4);
-const elgort = new Vampire("Elgort", 3);
-const sarah = new Vampire("Sarah", 2);
-const andrew = new Vampire("Andrew", 1);
-original.addOffspring(ansel);
-original.addOffspring(bart);
-ansel.addOffspring(elgort);
-ansel.addOffspring(sarah);
-elgort.addOffspring(andrew);
-console.log(original.isMoreSeniorThan(original));
-
+};
 
 module.exports = Vampire;
 
